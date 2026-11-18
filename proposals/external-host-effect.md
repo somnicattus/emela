@@ -99,7 +99,13 @@ effect Leak {
 - Writing `Host` anywhere else is a compile error (E0444): the signature of a pub fn, an effect declaration (the types of its operations), the effect named by a handler declaration, the fields of a type, enum or error, a Trait function, a const, and a set type argument of a named type (`Handler[E, Host]`).
 - The type of a pub fn after inference MUST NOT contain `Host`, neither in its R nor in a function type in its parameters or return type (E0445). A hidden set variable of a parameter is not `Host`; it becomes `Host` only at a call, in the R of the caller.
 
-These rules keep the interface of a module free of `Host`. They are not what makes the leak a compile error: the removal of `Host` at the bodies of a handler and E0402 are. Code that passes a value with `Host` in its type through a type parameter (a `State` whose type argument is inferred, say) still cannot call it outside a handler.
+These rules keep the interface of a module free of `Host`, and with them a value whose type contains `Host` cannot leave the bodies of a handler at all. A value leaves the bodies of a handler only in these ways, and none of them can carry `Host`:
+
+- as the result of an operation or the argument of `resume`, whose types come from the effect declaration. Omitted clauses there are empty (`[type.fn]`), `Host` cannot be written there, and the type arguments of the effect are written as concrete types in the handler declaration (`[effect.decl]`: there are no generic handlers), where `Host` cannot be written either (E0444);
+- as the fields of an error, which are declarations; an error has no type parameters (`[error.decl]`);
+- as the value of release, which is discarded, or as the handler value made by init, which is not seen outside the with (`[effect.handler]`).
+
+So the operation `get` of the Summary is rejected at the handler (E0403), and the value of a const, or the result of any function that is not a body of a handler, never has `Host` in its type. E0402 is a second line: without E0444, an operation declared with `uses { Host }` could return the closure, and calling it in `main` would be E0402.
 
 ### Typing rules
 
@@ -140,6 +146,7 @@ Added to Chapter 8 after `[effect.label]`, as 8.10.
 - Therefore a function value that performs a host side effect has Host in its type, and it can be called only inside the bodies of a handler. The R of main, a test function, an `@export` fn and the value of a const cannot contain Host (`[effect.with]`, E0402).
 - Host MAY be written in a uses clause of the signature of a fn that is not pub (its own, and those of the function types in its parameters and return type), and in a uses clause inside a body (the type annotation of a binding or of an anonymous function's parameter, and the signature of a local fn). Writing Host anywhere else is a compile error (E0444): the signature of a pub fn, an effect declaration, the effect named by a handler declaration, the fields of a type, enum or error, a Trait function, a const, and a set type argument of a named type.
 - The type of a pub fn after inference MUST NOT contain Host, in its R or in a function type in its parameters or return type (E0445). Host is a detail of the code that implements a handler, and a module shows the host to other modules only as named effects.
+- A value whose type contains Host cannot leave the bodies of a handler: the result of an operation and the argument of resume have the types of the effect declaration, the fields of an error are declarations, the value of release is discarded, and the handler value is not seen outside the with. Host is written in none of these.
 - Host has no suspend fn and is not Async, so it is Immediate (`[type.effect-bound]`).
 
 ```emel
@@ -254,10 +261,9 @@ No prototype of the change has been written. The leak in the Motivation was repr
 
 ## Open questions
 
-- The name: `Host`, or another (`Extern`, `Io`, `Foreign`).
+- The name: `Host`, or another (`Extern`, `Io`, `Foreign`). The proposal uses `Host`, the word that Chapter 12 already uses for the other side of an external function. `Io` would suggest one effect for all input and output, which the named effects of the platform layer are meant to replace.
 - Whether to drop E0407 for external functions with `uses` omitted and rely on `Host` and E0445 (see Alternatives). The proposal keeps it.
 - Whether an `@external suspend fn` declared with `uses {}` should contain `Host`. The proposal says yes, matching the current rule that it can be named only inside a handler.
 - Whether a set type argument (`Handler[E, Host]`) may be written in the signature of a fn that is not pub, as a uses clause may. The proposal forbids it, to keep the rule short.
-- Whether E0445 should also cover pub consts. The value of a const cannot call a function with `Host` in its R, but its type could hold one if a handler can be used in a const.
 
 ## Decision
