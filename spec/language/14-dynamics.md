@@ -18,7 +18,10 @@ Evaluation is strict and proceeds from left to right, and the initialization on 
 3. Run the releases in the reverse order of initialization.
 4. The result of the body (a value, an error, a defect or an interruption) is the result of the with.
 
-- Step 3 runs however the body ends.
+- Step 3 runs however the body ends. This covers only the ways a program observes itself leaving a with. A release does not run, or is cut off, in these cases:
+  - When the program cannot obtain the memory it needs, whether the releases run is implementation-defined (`[dyn.memory]`).
+  - When the event loop becomes empty, releases that are running are cut off, and the withs inside continuations left over after main or the test function has ended are not released (`[dyn.suspend]`).
+  - When the process is ended from outside the program (it is killed, or the host stops), nothing more of the program runs.
 - If evaluating an argument fails, no init has run yet, so nothing is released, and the with ends with that error.
 - If an init fails, only the handlers already initialized are released, in reverse order, and the body is not evaluated. The release of the handler that failed is not run (because its init returned no value). The with ends with the error of that init.
 - The effects used in the operation bodies of a handler are provided by handlers outside the with, or by handlers initialized earlier in the same with.
