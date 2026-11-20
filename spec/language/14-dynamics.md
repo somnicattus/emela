@@ -1,6 +1,6 @@
 # 14. Dynamic semantics `[dyn]`
 
-Evaluation is strict and proceeds from left to right, and the initialization on entering a with and the release on leaving it always come in pairs. The details of this chapter were decided in the triage of 18.2. The formal semantics is planned to be defined on a core calculus obtained by desugaring the surface syntax.
+Evaluation is strict and proceeds from left to right, and the initialization on entering a with and the release on leaving it come in pairs: a release runs only for a handler whose init has returned, and every such handler is released, except in the cases listed in `[dyn.with]`. The details of this chapter were decided in the triage of 18.2. The formal semantics is planned to be defined on a core calculus obtained by desugaring the surface syntax.
 
 ## 14.1 Evaluation order `[dyn.order]`
 
