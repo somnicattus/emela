@@ -1,6 +1,6 @@
 # 6. Using effects
 
-A function that prints a line, reads the clock or draws a random number does more than compute its result: it acts on the world outside the program, or depends on it. Emela calls such a capability an *effect*. The effects a function uses are part of its type, next to its errors, and they are provided from outside: the function says that it needs to print, and the code that calls it decides how printing is done.
+A function that prints a line, reads the clock or draws a random number does more than compute its result: it acts on the world outside the program, or depends on it. Emela calls such an ability of a function, to print or to read the clock, an *effect*. The effects a function uses are part of its type, next to its errors, and they are provided from outside: the function says that it needs to print, and the code that calls it decides how printing is done.
 
 That second half is what makes effects useful. The same function can print to the terminal when the program runs and into a list when a test runs, without a change to the function and without passing anything to it by hand.
 
@@ -33,7 +33,7 @@ Hello, Bob!
 ```
 
 - `import Std.Console.{Console, SystemConsole}` makes two names of the module `Std.Console` visible: the effect `Console` and the handler `SystemConsole`. The effects and handlers of the platform live in modules under `Std` (chapter 7 covers modules and imports).
-- `console <- Console` in `greet` says that the rest of the block uses the effect `Console`, under the name `console`. `console.print_line(...)` calls an *operation* of the effect.
+- `console <- Console` in `greet` says that the rest of the block uses the effect `Console`, under the name `console`. Such a name is an *effect alias*. `console.print_line(...)` calls an *operation* of the effect.
 - `with SystemConsole { ... }` in `main` provides `Console` to everything that runs in its block. `SystemConsole` is a *handler*: it implements the operations of `Console` by writing to the standard output of the process.
 
 `greet` does not say which handler it uses, and it could not: it only asks for `Console`. The handler is chosen by the `with` around the call.
@@ -165,7 +165,7 @@ Nothing marks the call: `clock.sleep(100)` is written like any other call, and s
 
 ## Summary
 
-- An effect is a capability that a function asks for, such as printing or reading the clock. A function uses it with `name <- Effect` and calls its operations as `name.operation(...)`.
+- An effect is something a function asks to be able to do, such as printing or reading the clock. A function uses it with `name <- Effect` and calls its operations as `name.operation(...)`.
 - The effects of a function are in its type, as `uses { A, B }`, and are inferred when `uses` is left out. They go on to every caller until a `with` provides them.
 - `with Handler { ... }` provides the effects of a handler to its block. `main` provides everything, usually with the layer `Platform` or `Process`.
 - A function never names its handler, so a later item in a `with` can replace one, for example `TestConsole` for `SystemConsole`.

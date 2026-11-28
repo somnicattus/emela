@@ -118,7 +118,7 @@ A call is in tail position when it is:
 - the body of a `match` arm, or a branch of an `if`, when the `match` or `if` is in tail position;
 - the right side of `&&` or `||` in tail position.
 
-So `x + sum(rest)` is not a tail call (the addition comes after it), and neither is a call inside an anonymous function, which runs as part of some other call. A call inside the body of a `with` (chapter 6) is not a tail call either, because the `with` still has work to do after its body ends, and neither is a call inside an `escape` (chapter 5).
+So `x + sum(rest)` is not a tail call (the addition comes after it), and neither is a call inside an anonymous function, which runs as part of some other call. A call inside the body of a `with` (chapter 6) is not a tail call either, because the `with` still has work to do after its body ends (chapter 11), and neither is a call inside an `escape` (chapter 5).
 
 The guarantee covers a function that calls itself, including a local function that calls its own name. Tail calls between two functions that call each other are not guaranteed.
 

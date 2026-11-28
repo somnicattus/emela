@@ -170,7 +170,7 @@ It writes the dependency into `Pome.toml` and the exact versions of everything i
 ```
 
 - A version in `Pome.toml` means "this version or later". `Pome.lock` records the version actually used of every Pome the project needs, directly or not, with its commit and a checksum of its contents. The `emela pome` commands write it, and it is not edited by hand. Without it, `emela run` and the other commands stop and suggest `emela pome install`, so it belongs with the project.
-- A dependency is fetched through a proxy, and its contents are checked against a checksum database, so a tag that is moved after publishing is noticed (`[pome.overview]`).
+- A dependency is fetched through a proxy, and its contents are checked against a checksum database, so a tag that is moved after publishing is noticed (`[module.pome]`).
 - `[dev-dependencies]` are used only by tests (chapter 8). `brix`, a set of helpers for assertions, is the usual first one.
 - `emela pome update`, `remove`, `list` and `verify` do what their names say (`[cmd.pome]`).
 

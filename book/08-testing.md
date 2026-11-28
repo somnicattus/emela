@@ -138,7 +138,7 @@ error[E4301]: effects `Console`, `Clock` are not provided in test function `need
 1 error
 ```
 
-Running `countdown` under `SystemConsole` and `SystemClock` would work, but the test would print to the terminal, take three seconds, and have nothing to compare. The standard library has a test handler for each such effect, named with `Test` in front (`[lib.layers]`):
+Running `countdown` under `SystemConsole` and `SystemClock` would work, but the test would print to the terminal, take three seconds, and have nothing to compare. The standard library has test handlers for several of them, named with `Test` in front (`[lib.layers]`):
 
 - `TestConsole` appends the printed lines to a list, kept in a State.
 - `TestClock` keeps a virtual time in a State. `sleep` waits only until nothing else in the program can run; then the clock moves forward to the time of the earliest sleep and wakes it. A test that sleeps for an hour finishes at once.
