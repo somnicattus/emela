@@ -14,7 +14,7 @@ The book is informative. Where it and the specification disagree, the specificat
 
 Chapters without a link are not written yet.
 
-Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one small program that uses each part of the book, and the commands that run it.
+[Introduction](00-introduction.md): the three pillars and the fixed premises, the two levels, installing Emela, a first program run on JS and WASM and tested, and how to read the book. (`[intro]`)
 
 ### Part I. Everyday Emela
 
