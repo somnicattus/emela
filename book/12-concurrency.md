@@ -136,7 +136,7 @@ fn fetch(name: String, ms: Int) -> String uses { Clock, Console } {
 }
 
 fn main() {
-  start = Instant.from_unix_milliseconds(Int64.from_int(0))
+  start = Instant.from_unix_milliseconds(0)
   with SystemConsole {
     (pair, end) = State.run(start, || {
       with TestClock {
@@ -232,7 +232,7 @@ fn slow(label: String, ms: Int) -> String uses { Clock } {
 }
 
 fn main() {
-  start = Instant.from_unix_milliseconds(Int64.from_int(0))
+  start = Instant.from_unix_milliseconds(0)
   (summary, _) = State.run(start, || {
     with TestClock {
       pair = Task.both(|| slow("a", 50), || slow("b", 30))
@@ -357,7 +357,7 @@ import Std.State.{State}
 import Std.Task
 
 fn main() {
-  start = Instant.from_unix_milliseconds(Int64.from_int(0))
+  start = Instant.from_unix_milliseconds(0)
   with SystemConsole {
     console <- Console
     (_, _) = State.run(start, || {

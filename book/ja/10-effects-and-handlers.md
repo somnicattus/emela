@@ -54,7 +54,7 @@ $ emela run
 
 ## `State` と状態を持つハンドラ
 
-Emela の値は決して変化せず、ハンドラのフィールドも `init` の後は不変です。インメモリストアや呼び出しを記録するテストハンドラのように、ハンドラが可変な状態を必要とする場合は、組み込みの `State[S]` エフェクトを使います（`[effect.state]`）。
+Emela の値は決して変化せず、ハンドラのフィールドも `init` の後は不変です。インメモリストアや呼び出しを記録するテストハンドラのように、ハンドラが可変な状態を必要とする場合は、標準ライブラリの `State[S]` エフェクト（`Std.State`、`[effect.state]`）を使います。
 
 ```emel
 import Std.Map
@@ -327,7 +327,7 @@ cache hit
 ```
 
 - `effect AuditLog of Console` は、`Console` と同じ操作とハンドラメンバを持ちつつ `R` の中では別のエフェクトとして扱われます。エフェクトエイリアス（`audit <- AuditLog`）で操作を直接呼ぶことも、`with AuditLog { ... }` で `AuditLog` から `Console` を提供して `emit` のような通常の関数を `AuditLog` へ書き込ませることもできます。
-- 基底となるエフェクトはユーザーエフェクトでなければなりません（別のラベルや組み込みエフェクトは不可）。`handler H: AuditLog` と書くことはできず、代わりに `AuditLog by H` で任意の `Console` ハンドラを接続するか、`AuditLog by Console` で `Console` へ合流させます。
+- 基底となるエフェクトはユーザーエフェクトでなければなりません（別のラベルや、`Async`・`TaskGroup` のような組み込みエフェクトは不可）。`handler H: AuditLog` と書くことはできず、代わりに `AuditLog by H` で任意の `Console` ハンドラを接続するか、`AuditLog by Console` で `Console` へ合流させます。
 - `PrefixConsole` は `Console` を実装しつつ、`print_line` の中で `Console` も使っています。ハンドラ自身が実装するエフェクトに対する要件は、自分自身ではなく外側の `Console`（ここでは同じ `with` 内の `SystemConsole`）によって満たされるため、自分自身を呼び出してしまうことはありません（`[effect.with]`）。
 - `effect DebugLog of Console default` は、明示的な `DebugLog by P` で上書きされない限り、`Console` を提供する任意の無名項目（ここでは `SystemConsole`）を含む `with` の本体へ自動的に提供されます。`default` ラベルは同じ `with` 内の他ハンドラの要件は満たさず、名前付き項目からも提供されません。`default` のないラベルは明示的に提供しなければならないため、監査ログが暗黙に標準出力へフォールバックしてしまうことはありません。
 - ラベルは `effect Hits of State[Int]` のように、具体的な型引数を持つパラメータ化エフェクトに対しても使えます。

@@ -54,7 +54,7 @@ An effect declared in source must have at least one operation or handler member.
 
 ## State and stateful handlers
 
-Values in Emela never change, and handler fields are immutable after `init`. When a handler needs mutable state, such as an in-memory store or a test handler that records calls, it uses the built-in `State[S]` effect (`[effect.state]`):
+Values in Emela never change, and handler fields are immutable after `init`. When a handler needs mutable state, such as an in-memory store or a test handler that records calls, it uses the standard library's `State[S]` effect (`Std.State`, `[effect.state]`):
 
 ```emel
 import Std.Map
@@ -327,7 +327,7 @@ cache hit
 ```
 
 - `effect AuditLog of Console` is a separate effect in `R` with the same operations and handler members as `Console`. You can call its operations directly through an effect alias (`audit <- AuditLog`), or serve `Console` from it with `with AuditLog { ... }` so ordinary functions like `emit` write to `AuditLog`.
-- Its underlying effect must be a user effect (not another label or a built-in effect). You cannot write `handler H: AuditLog`; instead you plug in any handler of `Console` with `AuditLog by H`, or merge it back into `Console` with `AuditLog by Console`.
+- Its underlying effect must be a user effect (not another label or a built-in effect such as `Async` or `TaskGroup`). You cannot write `handler H: AuditLog`; instead you plug in any handler of `Console` with `AuditLog by H`, or merge it back into `Console` with `AuditLog by Console`.
 - `PrefixConsole` implements `Console` and also uses `Console` inside `print_line`. A handler's requirement on its own effect is satisfied by the outer `Console` (here `SystemConsole` in the same `with`), not by itself, so it does not call itself (`[effect.with]`).
 - `effect DebugLog of Console default` is provided automatically to the body of any unnamed item that provides `Console` (here `SystemConsole`), unless overridden by an explicit `DebugLog by P`. A `default` label does not satisfy requirements of other handlers in the same `with`, and a named item does not provide it. A label without `default` must be provided explicitly, so an audit log can never silently fall back to standard output.
 - Labels also work on parameterized effects with concrete type arguments, such as `effect Hits of State[Int]`.

@@ -155,7 +155,7 @@ import Std.State.{State}
 
 @test
 fn prints_each_second() {
-  start = Instant.from_unix_milliseconds(Int64.from_int(0))
+  start = Instant.from_unix_milliseconds(0)
   ((_, lines), _) = State.run(start, || {
     State.run([], || {
       with TestClock, TestConsole {
@@ -168,7 +168,7 @@ fn prints_each_second() {
 
 @test
 fn takes_three_seconds() {
-  start = Instant.from_unix_milliseconds(Int64.from_int(0))
+  start = Instant.from_unix_milliseconds(0)
   (_, end) = State.run(start, || {
     State.run([], || {
       with TestClock, TestConsole {
@@ -176,7 +176,7 @@ fn takes_three_seconds() {
       }
     })
   })
-  assert Instant.to_unix_milliseconds(end) == Int64.from_int(3000)
+  assert Instant.to_unix_milliseconds(end) == 3000
 }
 ```
 

@@ -163,7 +163,7 @@ Operators higher in the table bind more tightly: `!a && b` is `(!a) && b`, and `
 
 - Arithmetic works on `Int`, `Int64` and `Float`, and both sides have the same type. `1 + 2.0` does not compile; write `1.0 + 2.0`, or convert one side with a function.
 - `+` does not join strings. Use interpolation, `"#{a}#{b}"`.
-- `==` and `!=` work on types with `Eq`, and `<` and the others on types with `Ord` (chapter 1).
+- `==` and `!=` work on types with `Eq`. `<`, `<=`, `>` and `>=` work on types with `Ord` (chapter 1) and also directly on `Float`, even though `Float` does not have `Ord` (chapter 9).
 - Comparisons do not chain. `0 < a < 3` does not compile; write `0 < a && a < 3`.
 - `&&` and `||` evaluate their right side only when the left side does not already decide the result.
 - A type you declare cannot define its own operators. Write a function, such as `Money.add(a, b)`.
