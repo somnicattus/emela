@@ -19,7 +19,7 @@ Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one 
 ### Part I. Everyday Emela
 
 1. [Data](01-data.md): basic types, `type`, `enum`, tuples, type parameters, `const`, using `derive`. (`[data]`, `[trait.derive]`)
-2. Functions and expressions: `fn`, argument names, blocks and bindings, `if`, `match` and patterns. (`[fn.decl]`, `[fn.args]`, `[fn.block]`, `[fn.if]`, `[fn.match]`)
+2. [Functions and expressions](02-functions.md): `fn`, argument names, type parameters, blocks and bindings, operators, `if`, `match` and patterns. (`[fn.decl]`, `[fn.args]`, `[fn.block]`, `[fn.operator]`, `[fn.if]`, `[fn.match]`)
 3. Functions as values: anonymous functions, the pipe `|>`, method calls `x.f(a)`, local functions. (`[fn.pipe]`, `[fn.local]`, `[type.fn]`)
 4. Repetition without changing values: immutability, recursion and the guarantee for tail calls, `List.map`, `List.fold` and `each`. (`[fn.loop]`, `[dyn.memory]`)
 5. Errors: `error`, `fail`, `escape`, the `fails` clause, and defects. (`[error]`)
