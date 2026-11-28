@@ -29,12 +29,12 @@
 
 ### 第 II 部　基盤
 
-9. トレイト：`trait`、`impl`、境界、`derive` の詳細。（`[trait]`）
-10. エフェクトとハンドラを定義する：`effect`、フィールドと状態を持つ `handler`、`layer`、名前付き `with` 項目、ハンドラメンバ、ラベル、`State`、ケイパビリティ型 `use E`、ケイパビリティが漏洩できない理由。（`[effect]`、`[effect.layer]`）
-11. リソースのライフタイム：`init` と `release`、`with` のスコープ、失敗時の解放、解放の順序。（`[effect.handler]`、`[dyn.with]`、`[dyn.memory]`）
-12. 中断と構造化並行性：`suspend fn` 操作と呼び出しに印が不要な理由、`Async` と `Immediate`、即座または後で再開するハンドラ、中断点でのみ切り替わるファイバ上のタスク、`Task.Group` と `Task.Background`、コンビネータ、割り込み、失敗の原因と `Exit.attempt`、`Deferred`・`Semaphore`・`Queue`。（`[effect.decl]`、`[effect.async]`、`[type.effect-bound]`、`[task]`、`[dyn.suspend]`）
-13. 合成による設計：`opaque` による内部表現の隠蔽、インターフェースとしてのトレイト、インターフェースとしてのエフェクトとその実装としてのハンドラ、フィールドに保持したケイパビリティへの委譲。
-14. 型が排除するもの：`E` と `R` が記録するもの、`E` と `R` の包含関係、`Immediate`、漏洩できないケイパビリティ、網羅性。（`[type]`）
+9. [トレイト](09-traits.md)：`trait`、`impl`、境界、`derive` の詳細。（`[trait]`）
+10. [エフェクトとハンドラを定義する](10-effects-and-handlers.md)：`effect`、フィールドと状態を持つ `handler`、`layer`、名前付き `with` 項目、ハンドラメンバ、ラベル、`State`、ケイパビリティ型 `use E`、ケイパビリティが漏洩できない理由。（`[effect]`、`[effect.layer]`）
+11. [リソースのライフタイム](11-resources.md)：`init` と `release`、`with` のスコープ、失敗時の解放、解放の順序。（`[effect.handler]`、`[dyn.with]`、`[dyn.memory]`）
+12. [中断と構造化並行性](12-concurrency.md)：`suspend fn` 操作と呼び出しに印が不要な理由、`Async` と `Immediate`、即座または後で再開するハンドラ、中断点でのみ切り替わるファイバ上のタスク、`Task.Group` と `Task.Background`、コンビネータ、割り込み、失敗の原因と `Exit.attempt`、`Deferred`・`Semaphore`・`Queue`。（`[effect.decl]`、`[effect.async]`、`[type.effect-bound]`、`[task]`、`[dyn.suspend]`）
+13. [合成による設計](13-composition.md)：`opaque` による内部表現の隠蔽、インターフェースとしてのトレイト、インターフェースとしてのエフェクトとその実装としてのハンドラ、フィールドに保持したケイパビリティへの委譲。
+14. [型が排除するもの](14-what-types-rule-out.md)：`E` と `R` が記録するもの、`E` と `R` の包含関係、`Immediate`、漏洩できないケイパビリティ、網羅性。（`[type]`）
 
 ### 第 III 部　ホストとターゲット
 
