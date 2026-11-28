@@ -4,7 +4,7 @@ A book that teaches Emela from the first program to the boundary with the host. 
 
 The book is informative. Where it and the specification disagree, the specification is right, and the book is to be fixed.
 
-## How the book is organised
+## How the book is organized
 
 - **One path through the language.** The chapters build on each other in order. Readers who already know some of the ideas skip ahead with the reading paths below, instead of reading a separate book.
 - **The two levels of the language are the first two parts.** Part I covers what people who write applications use; Part II covers what people who write libraries and runtime boundaries use (`[intro.layers]`). Part I does not depend on Part II.
@@ -32,7 +32,7 @@ Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one 
 9. Traits: `trait`, `impl`, bounds, and the details of `derive`. (`[trait]`)
 10. Defining effects and handlers: `effect`, `handler` with fields and state, handler members, labels, State, capability types `use E`, and why capabilities cannot leak. (`[effect]`)
 11. The lifetime of resources: `init` and `release`, the scope of a `with`, release on failure, and the order of release. (`[effect.handler]`, `[dyn.with]`, `[dyn.memory]`)
-12. Structured concurrency: `suspend fn`, Async, `Task.Group` and `Task.Background`, interruption, causes of failure, Deferred, Semaphore and Queue. (`[task]`, `[effect.async]`)
+12. Suspension and structured concurrency: `suspend fn` operations and why calls carry no mark, Async and Immediate, a handler that resumes now or later, tasks on fibers that switch only at suspension points, `Task.Group` and `Task.Background`, the combinators, interruption, causes of failure, Deferred, Semaphore and Queue. (`[effect.decl]`, `[effect.async]`, `[type.effect-bound]`, `[task]`, `[dyn.suspend]`)
 13. Designing with composition: hiding representation with `opaque`, traits as interfaces, effects as interfaces with handlers as their implementations, and delegating to a capability held in a field.
 14. What the types rule out: what E and R record, the containment of E and R, Immediate, capabilities that cannot leak, and exhaustiveness. (`[type]`)
 
@@ -40,7 +40,7 @@ Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one 
 
 15. One program, three targets: what the specification makes the same on JS, WASM and native, what is implementation-defined, and what each target does not support yet. (`[target]`)
 16. External functions: `@external`, host types, boundary types, the External effect, `@export` and entry adapters. (`[ext]`, `[effect.external]`)
-17. How Emela is compiled: specialisation and monomorphisation, state machines and generators, reference counting. This chapter describes the current implementation, not a guarantee of the language. (`[target.impl-hint]`)
+17. How Emela is compiled: specialization and monomorphization, state machines and generators, reference counting. This chapter describes the current implementation, not a guarantee of the language. (`[target.impl-hint]`)
 
 ### Part IV. Tools
 
@@ -48,7 +48,7 @@ Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one 
 
 ### Appendices
 
-- A. Coming from another language: Java; Haskell; Rust; Gleam; ZIO and Effect-TS; Koka, OCaml 5 and Effekt; C, WASM and JS; languages with similar aims.
+- A. Coming from another language: Java; Haskell; Rust; Gleam; ZIO and Effect-TS; Koka, OCaml 5 and Effekt; languages with `async` and `await`; C, WASM and JS as targets; languages with similar aims. Each guide covers data, errors, effects, and suspension and concurrency.
 - B. What Emela does not have, and why. (`[intro.premises]`, `[error.not]`, `[type.not]`, `[trait.not]`)
 - C. Index of the sections of the specification that each chapter relies on.
 
@@ -56,13 +56,34 @@ Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one 
 
 | If you know | Already familiar | New in Emela | Read |
 |---|---|---|---|
-| Java | Interfaces, dependency injection, checked exceptions | Data defined by its cases, no loops, no classes or inheritance | Introduction, all of Part I, then 13 |
+| Java | Interfaces, dependency injection, checked exceptions | Data defined by its cases, no loops, no classes or inheritance | Introduction, all of Part I, then 12, 13 |
 | Haskell | Algebraic data types, closures, type classes | Effects in place of monads, no higher-kinded types, no Result type | Introduction, 5, 6, Part II, Appendix B |
-| Rust | Enums with data, `match`, traits and `derive`, Option | No Result type or `?`, no ownership or borrowing, no mutable variables, effects | Introduction, 4 to 6, 9 to 11, 17 |
-| Gleam | Immutable values, no loops, the pipe, custom types, a JS target | Errors outside the return type, effects and handlers, traits | Introduction, 5, 6, 9, 10 |
+| Rust | Enums with data, `match`, traits and `derive`, Option | No Result type or `?`, no ownership or borrowing, no mutable variables, effects | Introduction, 4 to 6, 9 to 12, 17 |
+| Gleam | Immutable values, no loops, the pipe, custom types, a JS target | Errors outside the return type, effects and handlers, traits | Introduction, 5, 6, 9, 10, 12 |
+| JavaScript, TypeScript, Python, C#, Kotlin, Swift | `async` and `await` or `suspend fun`, promises, cancellation | Suspension without marks on functions or calls, typed errors, effects | Introduction, all of Part I, then 10, 12 |
 | ZIO, Effect-TS | Typed error and requirement channels, layers, fibers | Direct style, handlers as part of the language | Introduction, 5, 6, 10 to 12 |
 | Koka, OCaml 5, Effekt | Effect handlers | One-shot continuations only, errors apart from effects, `init` and `release`, capabilities that cannot leak | Introduction, 5, 10 to 12, 17 |
 | C, WASM, JS as targets | Output formats, host interfaces | How effects meet the host | Introduction, 1 to 6, Part III |
+
+### Suspension and concurrency
+
+Most readers arrive with a model of waiting and concurrency that differs from Emela's more than anything else does, so the guides of Appendix A compare it on its own. What every guide starts from:
+
+- There is no syntax for asynchrony. Only the declaration of an effect operation says that it may suspend (`suspend fn`); function signatures and calls carry no mark. Whether a function may suspend shows in its R, which is inferred.
+- The handler decides. The same function suspends under a handler that resumes later, and does not under a handler that resumes on the spot; then Async does not appear in the type of the `with` either. Where suspending would be wrong, such as in a callback given to the host, the type asks for Immediate.
+- Tasks run on fibers that switch cooperatively on one thread, only at calls that can suspend. The runtime yields for fairness after a count of such calls, not after an amount of time, so its yields fall at the same places on every run. A stretch with no such call runs as one step. There is no parallelism, and no threads or locks.
+- A task is started only in a `Task.Group` or `Task.Background`, and ends before the `with` that started it does. There is no function that interrupts a single task.
+- A continuation is resumed at most once.
+
+| If you know | What you use there | What to look for in Emela |
+|---|---|---|
+| Java | Threads, virtual threads, executors, locks | One thread and no locks; tasks bounded by a `with` |
+| Haskell | `IO`, `forkIO`, `async`, STM | Waiting as an effect operation, not a monad; atomic stretches between suspension points instead of transactions |
+| Rust | `async fn`, `.await`, futures, an executor, `Send` | No coloring of functions; the runtime is part of the program; nothing is shared between threads |
+| Gleam | Processes and messages on the BEAM | Tasks joined for their results instead of processes with mailboxes |
+| ZIO, Effect-TS | Fibers, `fork`, interruption, scopes, Deferred, Semaphore, Queue | The same tools in direct style; no `fork` outside a group, no function to interrupt one fiber |
+| Koka, OCaml 5, Effekt | Schedulers and async written as handlers | Async is provided only by the host; a user handler of a `suspend fn` chooses to resume now or later |
+| `async` and `await` languages | Promises or tasks, `await` at each call, cancellation tokens | Calls without `await`; interruption at suspension points, with releases run on the way out |
 
 ## Writing the book
 
