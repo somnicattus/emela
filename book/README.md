@@ -1,0 +1,72 @@
+# The Emela Programming Language
+
+A book that teaches Emela from the first program to the boundary with the host. It describes the 0.20 series of the language, as specified in [`spec/`](../spec/README.md).
+
+The book is informative. Where it and the specification disagree, the specification is right, and the book is to be fixed.
+
+## How the book is organised
+
+- **One path through the language.** The chapters build on each other in order. Readers who already know some of the ideas skip ahead with the reading paths below, instead of reading a separate book.
+- **The two levels of the language are the first two parts.** Part I covers what people who write applications use; Part II covers what people who write libraries and runtime boundaries use (`[intro.layers]`). Part I does not depend on Part II.
+- **Effects and handlers are the hub.** Resources, structured concurrency, designing with interfaces, and external functions are all built from handlers, so they come after the chapter that defines them.
+
+## Contents
+
+Chapters without a link are not written yet.
+
+Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one small program that uses each part of the book, and the commands that run it.
+
+### Part I. Everyday Emela
+
+1. [Data](01-data.md): basic types, `type`, `enum`, tuples, type parameters, `const`, using `derive`. (`[data]`, `[trait.derive]`)
+2. Functions and expressions: `fn`, argument names, blocks and bindings, `if`, `match` and patterns. (`[fn.decl]`, `[fn.args]`, `[fn.block]`, `[fn.if]`, `[fn.match]`)
+3. Functions as values: anonymous functions, the pipe `|>`, method calls `x.f(a)`, local functions. (`[fn.pipe]`, `[fn.local]`, `[type.fn]`)
+4. Repetition without changing values: immutability, recursion and the guarantee for tail calls, `List.map`, `List.fold` and `each`. (`[fn.loop]`, `[dyn.memory]`)
+5. Errors: `error`, `fail`, `escape`, the `fails` clause, and defects. (`[error]`)
+6. Using effects: `use`, `with`, the handlers of the standard library, `layer`, and replacing a handler in a test. (`[effect.use]`, `[effect.with]`, `[effect.layer]`, `[lib.layers]`)
+7. Modules and packages: modules, `pub`, `opaque`, and dependencies in a Pome. (`[module]`, `[pome.overview]`)
+8. Testing: `@test`, `assert`, test handlers, and `emela test`. (`[test]`, `[cmd.test]`)
+
+### Part II. The foundation
+
+9. Traits: `trait`, `impl`, bounds, and the details of `derive`. (`[trait]`)
+10. Defining effects and handlers: `effect`, `handler` with fields and state, handler members, labels, State, capability types `use E`, and why capabilities cannot leak. (`[effect]`)
+11. The lifetime of resources: `init` and `release`, the scope of a `with`, release on failure, and the order of release. (`[effect.handler]`, `[dyn.with]`, `[dyn.memory]`)
+12. Structured concurrency: `suspend fn`, Async, `Task.Group` and `Task.Background`, interruption, causes of failure, Deferred, Semaphore and Queue. (`[task]`, `[effect.async]`)
+13. Designing with composition: hiding representation with `opaque`, traits as interfaces, effects as interfaces with handlers as their implementations, and delegating to a capability held in a field.
+14. What the types rule out: what E and R record, the containment of E and R, Immediate, capabilities that cannot leak, and exhaustiveness. (`[type]`)
+
+### Part III. Hosts and targets
+
+15. One program, three targets: what the specification makes the same on JS, WASM and native, what is implementation-defined, and what each target does not support yet. (`[target]`)
+16. External functions: `@external`, host types, boundary types, the External effect, `@export` and entry adapters. (`[ext]`, `[effect.external]`)
+17. How Emela is compiled: specialisation and monomorphisation, state machines and generators, reference counting. This chapter describes the current implementation, not a guarantee of the language. (`[target.impl-hint]`)
+
+### Part IV. Tools
+
+18. The commands, Pome, the formatter, the test runner and the language server, as a reference. Each tool is first introduced in Part I where it is first used. (`[cmd]`, `[pome.overview]`, `[fmt]`, `[cmd.test]`, `[lsp]`)
+
+### Appendices
+
+- A. Coming from another language: Java; Haskell; Rust; Gleam; ZIO and Effect-TS; Koka, OCaml 5 and Effekt; C, WASM and JS; languages with similar aims.
+- B. What Emela does not have, and why. (`[intro.premises]`, `[error.not]`, `[type.not]`, `[trait.not]`)
+- C. Index of the sections of the specification that each chapter relies on.
+
+## Reading paths
+
+| If you know | Already familiar | New in Emela | Read |
+|---|---|---|---|
+| Java | Interfaces, dependency injection, checked exceptions | Data defined by its cases, no loops, no classes or inheritance | Introduction, all of Part I, then 13 |
+| Haskell | Algebraic data types, closures, type classes | Effects in place of monads, no higher-kinded types, no Result type | Introduction, 5, 6, Part II, Appendix B |
+| Rust | Enums with data, `match`, traits and `derive`, Option | No Result type or `?`, no ownership or borrowing, no mutable variables, effects | Introduction, 4 to 6, 9 to 11, 17 |
+| Gleam | Immutable values, no loops, the pipe, custom types, a JS target | Errors outside the return type, effects and handlers, traits | Introduction, 5, 6, 9, 10 |
+| ZIO, Effect-TS | Typed error and requirement channels, layers, fibers | Direct style, handlers as part of the language | Introduction, 5, 6, 10 to 12 |
+| Koka, OCaml 5, Effekt | Effect handlers | One-shot continuations only, errors apart from effects, `init` and `release`, capabilities that cannot leak | Introduction, 5, 10 to 12, 17 |
+| C, WASM, JS as targets | Output formats, host interfaces | How effects meet the host | Introduction, 1 to 6, Part III |
+
+## Writing the book
+
+- Each chapter states the rules in its own terms. Comparisons with other languages go in Appendix A, not in the chapters.
+- Section names of the specification (`[effect.handler]`) are given where a chapter relies on a rule, so that a reader can look up the exact wording.
+- Code examples match the output of `emela fmt` and are checked to compile with the current compiler. The output shown is the output of `emela run` on the JS target unless the text says otherwise.
+- The current implementation is kept apart from the language. A sentence about what the compiler does today says so.
