@@ -24,7 +24,7 @@ Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one 
 4. [Repetition without changing values](04-repetition.md): the functions that go over a list, `List.fold`, recursion, the guarantee for tail calls, building a list, and immutability. (`[fn.loop]`, `[api.list]`, `[dyn.memory]`)
 5. [Errors](05-errors.md): `error`, `fail`, the `fails` clause, `escape`, errors of functions passed as arguments, choosing between an Option and an error, errors that reach `main`, and defects. (`[error]`, `[dyn.error]`, `[lib.api-rules]`)
 6. [Using effects](06-using-effects.md): effect aliases `x <- E` and operations, `uses`, `with`, the handlers and the layers `Platform` and `Process` of the standard library, replacing a handler, effects of function values, and calls that wait. (`[effect.use]`, `[effect.with]`, `[lib.layers]`)
-7. Modules and packages: modules, `pub`, `opaque`, and dependencies in a Pome. (`[module]`, `[pome.overview]`)
+7. [Modules and packages](07-modules.md): files as modules, `import`, `pub`, `opaque`, Pomes, dependencies and the lock, `@external` permissions, and checking the versions of a library. (`[module]`, `[pome.overview]`, `[cmd.pome]`)
 8. Testing: `@test`, `assert`, test handlers, and `emela test`. (`[test]`, `[cmd.test]`)
 
 ### Part II. The foundation
