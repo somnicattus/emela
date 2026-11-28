@@ -23,14 +23,14 @@ Introduction. A first look at Emela: the three pillars (`[intro.pillars]`), one 
 3. [Functions as values](03-functions-as-values.md): passing functions, anonymous functions and what they capture, function types, the pipe `|>`, method calls `x.f(a)`, local functions. (`[fn.decl]`, `[type.fn]`, `[fn.pipe]`, `[type.rules]`, `[fn.local]`)
 4. [Repetition without changing values](04-repetition.md): the functions that go over a list, `List.fold`, recursion, the guarantee for tail calls, building a list, and immutability. (`[fn.loop]`, `[api.list]`, `[dyn.memory]`)
 5. [Errors](05-errors.md): `error`, `fail`, the `fails` clause, `escape`, errors of functions passed as arguments, choosing between an Option and an error, errors that reach `main`, and defects. (`[error]`, `[dyn.error]`, `[lib.api-rules]`)
-6. Using effects: `use`, `with`, the handlers of the standard library, `layer`, and replacing a handler in a test. (`[effect.use]`, `[effect.with]`, `[effect.layer]`, `[lib.layers]`)
+6. [Using effects](06-using-effects.md): effect aliases `x <- E` and operations, `uses`, `with`, the handlers and the layers `Platform` and `Process` of the standard library, replacing a handler, effects of function values, and calls that wait. (`[effect.use]`, `[effect.with]`, `[lib.layers]`)
 7. Modules and packages: modules, `pub`, `opaque`, and dependencies in a Pome. (`[module]`, `[pome.overview]`)
 8. Testing: `@test`, `assert`, test handlers, and `emela test`. (`[test]`, `[cmd.test]`)
 
 ### Part II. The foundation
 
 9. Traits: `trait`, `impl`, bounds, and the details of `derive`. (`[trait]`)
-10. Defining effects and handlers: `effect`, `handler` with fields and state, handler members, labels, State, capability types `use E`, and why capabilities cannot leak. (`[effect]`)
+10. Defining effects and handlers: `effect`, `handler` with fields and state, `layer`, named `with` items, handler members, labels, State, capability types `use E`, and why capabilities cannot leak. (`[effect]`, `[effect.layer]`)
 11. The lifetime of resources: `init` and `release`, the scope of a `with`, release on failure, and the order of release. (`[effect.handler]`, `[dyn.with]`, `[dyn.memory]`)
 12. Suspension and structured concurrency: `suspend fn` operations and why calls carry no mark, Async and Immediate, a handler that resumes now or later, tasks on fibers that switch only at suspension points, `Task.Group` and `Task.Background`, the combinators, interruption, causes of failure, Deferred, Semaphore and Queue. (`[effect.decl]`, `[effect.async]`, `[type.effect-bound]`, `[task]`, `[dyn.suspend]`)
 13. Designing with composition: hiding representation with `opaque`, traits as interfaces, effects as interfaces with handlers as their implementations, and delegating to a capability held in a field.
